@@ -88,6 +88,13 @@ describe RSpec::Mate::Runner do
       end
       @spec_mate.run_files
     end
+
+    it 'supports `:only_failures => true`' do
+      expect(@spec_mate).to receive(:run_rspec) do |argv|
+        expect(argv).to include('--only-failures')
+      end
+      @spec_mate.run_files(:only_failures => true)
+    end
   end
 
   describe "#run_last_remembered_file" do

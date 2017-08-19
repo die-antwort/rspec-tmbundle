@@ -12,7 +12,7 @@
 cat &lt;&lt;'RUBYEOF' &gt; /tmp/textmate-command-$$.rb
 
 require ENV['TM_BUNDLE_SUPPORT'] + "/lib/rspec/mate"
-RSpec::Mate::Runner.new.run_files
+RSpec::Mate::Runner.new.run_files(:only_failures =&gt; true)
 
 RUBYEOF
 
@@ -25,7 +25,7 @@ ${TM_RUBY:-ruby} /tmp/textmate-command-$$.rb; exit_status=$?; rm /tmp/textmate-c
 	<key>keyEquivalent</key>
 	<string>~@R</string>
 	<key>name</key>
-	<string>Run Examples in Selected Files</string>
+	<string>Run Failed Examples in Selected Files</string>
 	<key>outputCaret</key>
 	<string>afterOutput</string>
 	<key>outputFormat</key>
@@ -35,7 +35,7 @@ ${TM_RUBY:-ruby} /tmp/textmate-command-$$.rb; exit_status=$?; rm /tmp/textmate-c
 	<key>scope</key>
 	<string>source.ruby.rspec, attr.test.rspec</string>
 	<key>uuid</key>
-	<string>67E726E0-63E2-4840-B8BB-37F665CD34B9</string>
+	<string>A32867B5-C455-49E7-A66A-819D4EC376D1</string>
 	<key>version</key>
 	<integer>2</integer>
 </dict>

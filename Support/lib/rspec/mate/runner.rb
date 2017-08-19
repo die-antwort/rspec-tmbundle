@@ -152,6 +152,7 @@ module RSpec
           argv << '-r' << File.join(File.dirname(__FILE__), 'filter_bundle_backtrace')
         end
 
+        argv << '--only-failures' if options[:only_failures]
         argv += ENV['TM_RSPEC_OPTS'].split(" ") if ENV['TM_RSPEC_OPTS']
 
         argv

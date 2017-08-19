@@ -1,6 +1,7 @@
 This file is intended to give a quick overview of important and potentially non-backward-compatible changes. Please refer to the git log for a full list of changes.
 
 # August, 2017
+ * New command “Run Failed Examples in Selected Files” (<kbd>⇧⌘R</kbd>, same as “Run Single Example”).
  * New command “Run Single Example in Terminal” (<kbd>⇧⌘R</kbd>, same as “Run Single Example”).
  
 # February, 2017
