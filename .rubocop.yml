@@ -4,6 +4,7 @@ require: rubocop-rspec
 AllCops:
   Exclude:
     - "Support/syntax/syntax_highlight_test_spec.rb"
+
 RSpec/ExampleWording:
   Exclude:
     - "Support/fixtures/*_spec.rb"
@@ -15,9 +16,11 @@ AbcSize:
   
 BlockLength:
   Max: 180
-  
+  Exclude:
+    - "Support/spec/**/*_spec.rb"
+
 ClassLength:
-  Max: 130
+  Max: 150
   
 LineLength:
   Max: 150

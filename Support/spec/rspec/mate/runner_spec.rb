@@ -100,16 +100,17 @@ describe RSpec::Mate::Runner do
   end
 
   describe '#run_again' do
-    def self.it_works_for(method, &block)
+    def self.it_works_for(method, options={}, &block)
+      run_cmd = options[:run_cmd] || :run_rspec
       it "works for #{method}" do
         original_argv = nil
         rerun_argv = nil
-        expect(@spec_mate).to receive(:run_rspec) do |argv|
+        expect(@spec_mate).to receive(run_cmd) do |argv|
           original_argv = argv.dup
         end
         instance_exec(&block)
         expect(original_argv).to_not be_nil
-        expect(@spec_mate).to receive(:run_rspec) do |argv|
+        expect(@spec_mate).to receive(run_cmd) do |argv|
           rerun_argv = argv.dup
         end
         @spec_mate.run_again
@@ -132,6 +133,13 @@ describe RSpec::Mate::Runner do
       ENV['TM_LINE_NUMBER'] = '4'
       @spec_mate.run_focussed
     end
+
+    it_works_for '#run_focussed(in_terminal: true)', :run_cmd => :run_rspec_in_terminal do
+      expect(TextMate).to receive(:exit_discard).twice
+      ENV['TM_FILEPATH'] = fixtures_path('example_failing_spec.rb')
+      ENV['TM_LINE_NUMBER'] = '4'
+      @spec_mate.run_focussed(:in_terminal => true)
+    end
   end
 
   describe "#run_focussed" do
@@ -153,6 +161,38 @@ describe RSpec::Mate::Runner do
 
       expect(html).to_not match @first_failing_spec
       expect(html).to match @second_failing_spec
+    end
+  end
+
+  describe '#run_focussed(in_terminal: true)' do
+    def expect_applescript_to_be_executed_including(script_line)
+      expect(IO).to receive(:popen).with('osascript', 'w') do |&block|
+        io = StringIO.new
+        block.call(io)
+        expect(io.string).to include(script_line)
+      end
+    end
+
+    before do
+      ENV['TM_PROJECT_DIRECTORY'] = '/foo/bar'
+      ENV['TM_FILEPATH'] = fixtures_path('example_failing_spec.rb')
+      ENV['TM_LINE_NUMBER'] = '4'
+      expect(Executable).to receive(:find).with('rspec').and_return(['command_to_run_rspec'])
+      expect(TextMate).to receive(:exit_discard)
+      @expected_shell_cmd = "cd /foo/bar && command_to_run_rspec #{e_sh(fixtures_path('example_failing_spec.rb'))}\\:4"
+    end
+
+    it 'runs RSpec in terminal (via Applescript)' do
+      expect_applescript_to_be_executed_including %(do script "#{e_as(@expected_shell_cmd)}")
+      @spec_mate.run_focussed(:in_terminal => true)
+    end
+
+    context 'with ENV["TM_TERMINAL_USE_TABS"] set' do
+      it 'runs RSpec in a new terminal tab (via Applescript)' do
+        ENV['TM_TERMINAL_USE_TABS'] = "1"
+        expect_applescript_to_be_executed_including %(do script "#{e_as(@expected_shell_cmd)}" in the last tab of window 1)
+        @spec_mate.run_focussed(:in_terminal => true)
+      end
     end
   end
 

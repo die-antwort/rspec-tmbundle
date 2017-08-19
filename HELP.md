@@ -4,6 +4,7 @@ Commands for running examples:
 
  * __Run Examples__ <kbd>⌘R</kbd>: Run all examples in the current spec file.
  * __Run Single Example__ <kbd>⇧⌘R</kbd>: Run the example on the current line (also works for example groups).
+ * __Run Single Example in Terminal__ <kbd>⇧⌘R</kbd>: Same as above, but runs RSpec in a terminal window. This is especially useful if you need to interact with the RSpec process because you’re debugging using `pry` or `byebug`.
  * __Run Examples in Selected Files/Directories__ <kbd>⌥⇧⌘R</kbd>: Run all examples from the files / directories selected in the file browser. If nothing is selected, run all examples in `spec/`. Hint: <kbd>⇧⌘A ⌥⇧⌘R</kbd> is a quick way to run all specs (<kbd>⇧⌘A</kbd> deselects everything in the file browser).
  * __Run Again__ <kbd>⌃⌥⌘R</kbd>: Repeat the last run command (can be example file, single example or examples in selected files).
  
@@ -60,6 +61,11 @@ the full classname, e.g. `'Spec::Core::Formatters::WebKit'`
 
 Use this to set RSpec options just as you would in an `.rspec`
 file.
+
+## TM\_TERMINAL\_USE\_TABS
+
+If set, “Run Single Example in Terminal” will open a new tab in an existing terminal window instead of creating a new terminal window. (This setting originates from the “Open Terminal” command in the Shell Script bundle).
+
 
 # RVM Integration
 

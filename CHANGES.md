@@ -1,5 +1,8 @@
 This file is intended to give a quick overview of important and potentially non-backward-compatible changes. Please refer to the git log for a full list of changes.
 
+# August, 2017
+ * New command “Run Single Example in Terminal” (<kbd>⇧⌘R</kbd>, same as “Run Single Example”).
+ 
 # February, 2017
  * Support for RSpec 2 has been dropped from master. Please use the branch `rspec2` instead.
  * The shortcut for “Run Again” has been changed from <kbd>⌥⌘R</kbd> to <kbd>⌃⌥⌘R</kbd> so it no longer overrides  TextMate’s shortcut for Edit → Find → Find Behaviour → Regular Expression.

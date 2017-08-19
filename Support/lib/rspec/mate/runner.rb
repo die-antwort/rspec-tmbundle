@@ -3,6 +3,8 @@ require 'cgi'
 require 'shellwords'
 require 'open3'
 require 'yaml'
+require ENV['TM_SUPPORT_PATH'] + '/lib/escape.rb'
+require ENV['TM_SUPPORT_PATH'] + '/lib/exit_codes.rb'
 
 # This works because we declare a dependency on the Ruby bundle (see `info.plist`).
 require "#{ENV['TM_RUBY_BUNDLE_SUPPORT']}/lib/executable"
@@ -33,7 +35,7 @@ module RSpec
       end
 
       def run_again
-        run(:run_again => true)
+        run(load_options_from_last_run)
       end
 
       def run_focussed(options={})
@@ -44,13 +46,15 @@ module RSpec
       end
 
       def run(options)
-        if options.delete(:run_again)
-          argv = load_argv_from_last_run
+        save_as_last_run(options)
+        argv = build_argv_from_options(options)
+        if options[:in_terminal]
+          run_rspec_in_terminal(argv)
+          # Never show an output window when running in terminal (when invoked via "Run Again" command, normally an output window would be shown).
+          TextMate.exit_discard
         else
-          argv = build_argv_from_options(options)
-          save_as_last_run(argv)
+          run_rspec(argv)
         end
-        run_rspec(argv)
       end
 
       def run_rspec(argv)
@@ -86,6 +90,46 @@ module RSpec
         $stderr = old_stderr
       end
 
+      def run_rspec_in_terminal(argv)
+        rspec_cmd = Executable.find("rspec") + argv
+        shell_cmd = "cd #{e_sh(project_directory)} && #{rspec_cmd.map { |c| e_sh(c) }.join(' ')}"
+
+        # Applescripts copied from "Open Terminal" command in the Shell Script bundle
+        script =
+          if ENV['TM_TERMINAL_USE_TABS']
+            <<-APPLESCRIPT.gsub(/^              /, '')
+              tell application "Terminal"
+                activate
+                set numberOfTabs to count tabs in window 1
+                tell application "System Events"
+                  repeat while "Terminal" is not name of (process 1 where frontmost is true)
+                    delay 0.1
+                  end repeat
+                  tell process "Terminal" to keystroke "t" using command down
+                end tell
+                set startedAt to current date
+                repeat while (count tabs in window 1) is numberOfTabs
+                  delay 0.1
+                  if (current date) - startedAt > 2 then
+                    error "Could not open new tab"
+                  end if
+                end repeat
+                do script "#{e_as shell_cmd}" in the last tab of window 1
+              end tell
+            APPLESCRIPT
+          else
+            <<-APPLESCRIPT.gsub(/^              /, '')
+              tell application "Terminal"
+                activate
+                do script "#{e_as shell_cmd}"
+              end tell
+            APPLESCRIPT
+          end
+        IO.popen('osascript', 'w') do |io|
+          io << script
+        end
+      end
+
       def save_as_last_remembered_file(file)
         File.open(LAST_REMEMBERED_FILE_CACHE, "w") do |f|
           f << file
@@ -102,9 +146,11 @@ module RSpec
         # :line is only ever set in #run_focussed, and there :files is always set to a single file only.
         argv = options[:line] ? ["#{options[:files].first}:#{options[:line]}"] : options[:files].dup
 
-        argv << '--format' << formatter
-        argv << '-r' << File.join(File.dirname(__FILE__), 'text_mate_formatter') if formatter == 'RSpec::Mate::Formatters::TextMateFormatter'
-        argv << '-r' << File.join(File.dirname(__FILE__), 'filter_bundle_backtrace')
+        unless options[:in_terminal]
+          argv << '--format' << formatter
+          argv << '-r' << File.join(File.dirname(__FILE__), 'text_mate_formatter') if formatter == 'RSpec::Mate::Formatters::TextMateFormatter'
+          argv << '-r' << File.join(File.dirname(__FILE__), 'filter_bundle_backtrace')
+        end
 
         argv += ENV['TM_RSPEC_OPTS'].split(" ") if ENV['TM_RSPEC_OPTS']
 
@@ -123,7 +169,7 @@ module RSpec
         end
       end
 
-      def load_argv_from_last_run
+      def load_options_from_last_run
         YAML.load_file(LAST_RUN_CACHE)
       end
 
