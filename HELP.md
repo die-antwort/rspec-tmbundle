@@ -7,7 +7,7 @@ Commands for running examples:
  * __Run Single Example in Terminal__ <kbd>⇧⌘R</kbd>: Same as above, but runs RSpec in a terminal window. This is especially useful if you need to interact with the RSpec process because you’re debugging using `pry` or `byebug`.
  * __Run Examples in Selected Files__ <kbd>⌥⇧⌘R</kbd>: Run all examples from the files / directories selected in the file browser. If nothing is selected, run all examples in `spec/`. Hint: <kbd>⇧⌘A ⌥⇧⌘R</kbd> is a quick way to run all specs (<kbd>⇧⌘A</kbd> deselects everything in the file browser).
  * __Run Failed Examples in Selected Files__ <kbd>⌥⇧⌘R</kbd>: Same as above, but only run examples that failed previously (using [`--only-failures`](https://relishapp.com/rspec/rspec-core/v/3-6/docs/command-line/only-failures)).
- * __Run Again__ <kbd>⌃⌥⌘R</kbd>: Repeat the last run command (can be example file, single example or examples in selected files).
+ * __Run Again__ <kbd>⌥⇧⌘R</kbd>: Repeat the last run command (can be example file, single example or examples in selected files).
  
 If your project has an `.rspec` file in its root, the last two commands – “Run Examples in Selected Files/Directories” and “Run Again” – are available everywhere in your project (even in files that not using the “RSpec” mode).
  
