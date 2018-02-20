@@ -23,7 +23,7 @@ ${TM_RUBY:-ruby} /tmp/textmate-command-$$.rb; exit_status=$?; rm /tmp/textmate-c
 	<key>inputFormat</key>
 	<string>text</string>
 	<key>keyEquivalent</key>
-	<string>~@R</string>
+	<string>^~@r</string>
 	<key>name</key>
 	<string>Run Again</string>
 	<key>outputCaret</key>
