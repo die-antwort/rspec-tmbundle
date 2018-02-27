@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>saveModifiedFiles</string>
+	<key>command</key>
+	<string>#!/usr/bin/env bash
+
+. "$TM_BUNDLE_SUPPORT/lib/init-command"
+
+cat &lt;&lt;'RUBYEOF' &gt; /tmp/textmate-command-$$.rb
+
+require ENV['TM_BUNDLE_SUPPORT'] + "/lib/rspec/mate"
+RSpec::Mate::Runner.new.run_all_files
+
+RUBYEOF
+
+${TM_RUBY:-ruby} /tmp/textmate-command-$$.rb; exit_status=$?; rm /tmp/textmate-command-$$.rb; exit $exit_status
+</string>
+	<key>input</key>
+	<string>none</string>
+	<key>inputFormat</key>
+	<string>text</string>
+	<key>keyEquivalent</key>
+	<string>^~@r</string>
+	<key>name</key>
+	<string>Run All Examples</string>
+	<key>outputCaret</key>
+	<string>afterOutput</string>
+	<key>outputFormat</key>
+	<string>html</string>
+	<key>outputLocation</key>
+	<string>newWindow</string>
+	<key>scope</key>
+	<string>source.ruby.rspec, attr.test.rspec</string>
+	<key>uuid</key>
+	<string>6A1185CB-69FF-49D9-BDE6-5B2247D573E6</string>
+	<key>version</key>
+	<integer>2</integer>
+</dict>
+</plist>
