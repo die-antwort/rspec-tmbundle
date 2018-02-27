@@ -100,7 +100,7 @@ module RSpec
             <<-APPLESCRIPT.gsub(/^              /, '')
               tell application "Terminal"
                 activate
-                set numberOfTabs to count tabs in window 1
+                set originalContent to contents of tab in window 1
                 tell application "System Events"
                   repeat while "Terminal" is not name of (process 1 where frontmost is true)
                     delay 0.1
@@ -108,7 +108,7 @@ module RSpec
                   tell process "Terminal" to keystroke "t" using command down
                 end tell
                 set startedAt to current date
-                repeat while (count tabs in window 1) is numberOfTabs
+                repeat while (contents of tab in window 1) is originalContent
                   delay 0.1
                   if (current date) - startedAt > 2 then
                     error "Could not open new tab"
