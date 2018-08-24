@@ -6,7 +6,6 @@ require 'erb'
 module RSpec
   module Mate
     module Formatters
-      # rubocop:disable ClassLength,LineLength
       class TextMateBacktracePrinter
         include ERB::Util # for the #h method
         def initialize(output)
@@ -15,7 +14,7 @@ module RSpec
           @messages = []
           @messages_before_start = []
         end
-        
+
         def escape_js_string(str)
           h(str).gsub(/\r?\n/, '<br>')
         end

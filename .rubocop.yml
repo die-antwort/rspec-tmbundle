@@ -9,7 +9,7 @@ RSpec/ExampleWording:
   Exclude:
     - "Support/fixtures/*_spec.rb"
   
-# Relax some metric cops for now. All of these should be removed eventually.
+# Relax / disable some metric cops for now. All of these should be removed eventually.
 
 AbcSize: 
   Max: 40
@@ -20,16 +20,16 @@ BlockLength:
     - "Support/spec/**/*_spec.rb"
 
 ClassLength:
-  Max: 150
+  Enabled: false
   
 LineLength:
-  Max: 150
+  Enabled: false
   
 MethodLength:
   Max: 50
   
 ModuleLength:
-  Max: 160
+  Enabled: false
 
 PerceivedComplexity:
   Max: 12

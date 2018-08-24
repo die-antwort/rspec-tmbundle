@@ -181,12 +181,14 @@ describe RSpec::Mate::Runner do
     end
 
     before do
+      # rubocop:disable ExpectInHook
       ENV['TM_PROJECT_DIRECTORY'] = '/foo/bar'
       ENV['TM_FILEPATH'] = fixtures_path('example_failing_spec.rb')
       ENV['TM_LINE_NUMBER'] = '4'
       expect(Executable).to receive(:find).with('rspec').and_return(['command_to_run_rspec'])
       expect(TextMate).to receive(:exit_discard)
       @expected_shell_cmd = "cd /foo/bar && command_to_run_rspec #{e_sh(fixtures_path('example_failing_spec.rb'))}\\:4"
+      # rubocop:enable ExpectInHook
     end
 
     it 'runs RSpec in terminal (via Applescript)' do
@@ -265,9 +267,7 @@ private
 
   def fixtures_path(fixture_file=nil)
     # TODO: long path
-    fixtures_path = File.expand_path(
-      File.dirname(__FILE__)
-    ) + '/../../../fixtures'
+    fixtures_path = __dir__ + '/../../../fixtures'
 
     File.expand_path(fixture_file ? File.join(fixtures_path, fixture_file) : fixtures_path)
   end

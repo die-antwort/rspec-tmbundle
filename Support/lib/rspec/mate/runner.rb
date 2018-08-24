@@ -17,12 +17,12 @@ module RSpec
       include Helpers
       LAST_REMEMBERED_FILE_CACHE = "/tmp/textmate_rspec_last_remembered_file_cache.txt".freeze
       LAST_RUN_CACHE             = "/tmp/textmate_rspec_last_run.yml".freeze
-      
+
       def run_all_files(options={})
         options[:files] = ["spec/"]
         run(options)
       end
-      
+
       def run_files(options={})
         files = ENV['TM_SELECTED_FILES'] ? Shellwords.shellwords(ENV['TM_SELECTED_FILES']) : ["spec/"]
         options[:files] = files
